@@ -1,0 +1,8 @@
+/* Custom CSS */
+
+label.error {
+  color:#FB3A3A;
+  background:#F2DEDE;
+  border:1px solid #f5aca6;
+  padding: 4px 5px 0px 5px;
+}
