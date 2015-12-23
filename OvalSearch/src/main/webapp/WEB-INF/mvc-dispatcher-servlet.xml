@@ -12,10 +12,10 @@
 	<context:component-scan base-package="com.ovalsearch" />
 	<context:annotation-config />
 	<mvc:annotation-driven />
-	<mvc:resources mapping="/css/**" location="/WEB-INF/css/" />
-	<mvc:resources mapping="/img/**" location="/WEB-INF/img/" />
-	<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
-	<mvc:resources mapping="/fonts/**" location="/WEB-INF/fonts/" />
+	<!-- <mvc:resources mapping="/css/**" location="/WEB-INF/css/" /> <mvc:resources 
+		mapping="/img/**" location="/WEB-INF/img/" /> <mvc:resources mapping="/js/**" 
+		location="/WEB-INF/js/" /> <mvc:resources mapping="/fonts/**" location="/WEB-INF/fonts/" 
+		/> -->
 
 	<bean id="dataSourceLocal"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -36,7 +36,7 @@
 			<props>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.jdbc.batch_size">20</prop>
 			</props>
 		</property>
@@ -70,5 +70,14 @@
 		<property name="defaultErrorView" value="exception" />
 		<property name="warnLogCategory"
 			value="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" />
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
 	</bean>
 </beans>

@@ -1,0 +1,53 @@
+/**
+ *  Copyright 2015 Jasper Infotech (P) Limited . All Rights Reserved.
+ *  JASPER INFOTECH PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+package com.ovalsearch.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ovalsearch.base.GetApplicationsRequest;
+import com.ovalsearch.base.GetApplicationsResponse;
+import com.ovalsearch.cache.ApplicationsCache;
+import com.ovalsearch.entity.Applications;
+import com.ovalsearch.services.IConverterService;
+import com.ovalsearch.utils.CacheManager;
+
+/**
+ * @version 1.0, 23-Dec-2015
+ * @author deepanshu
+ */
+@Controller
+@RequestMapping("/applications")
+public class ApplicationsController {
+
+    @Autowired
+    private IConverterService   converterService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationsController.class);
+
+    @RequestMapping(value = "/getApplications", produces = "application/json", method = RequestMethod.POST)
+    @ResponseBody
+    public GetApplicationsResponse getApplications(@RequestBody GetApplicationsRequest request) {
+        GetApplicationsResponse response = new GetApplicationsResponse();
+        if (request != null && request.getName() != null) {
+            LOG.info("Request received to get applications with name : " + request.getName());
+            List<Applications> applicationsList = CacheManager.getInstance().getCache(ApplicationsCache.class).getAllMatchingApplications(request.getName());
+            response.setSros(converterService.getSroFromEntity(applicationsList));
+            LOG.info("Sending response for GetApplicationsRequest {}", response);
+        } else {
+            LOG.info("Request received with null values. Sending null response");
+        }
+        return response;
+    }
+
+}

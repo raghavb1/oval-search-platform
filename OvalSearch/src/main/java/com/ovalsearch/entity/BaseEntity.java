@@ -21,19 +21,20 @@ public abstract class BaseEntity implements Serializable {
 	 * 
 	 */
     private static final long serialVersionUID = 1L;
+
+    private Long              id;
+
+    private Date              created;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long              id;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created", nullable = false)
-    private Date              created;
-
     public Long getId() {
         return id;
     }
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created", nullable = false)
     public Date getCreated() {
         return created;
     }
