@@ -85,7 +85,7 @@ public class DownloadDataThread implements Runnable {
                   applications.setName(getStringFromXML(eElement,"name"));
                   applications.setPath(getStringFromXML(eElement,"path"));
                   applications.setRating(Float.parseFloat(getStringFromXML(eElement,"rat")));
-                  applications.setSize(Integer.parseInt(getStringFromXML(eElement,"11134")));
+                  applications.setSize(Integer.parseInt(getStringFromXML(eElement,"sz")));
                   
                   entityDAO.saveOrUpdate(applications);
                }
