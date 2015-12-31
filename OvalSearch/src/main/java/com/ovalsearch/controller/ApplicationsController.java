@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ovalsearch.base.GetApplicationsRequest;
 import com.ovalsearch.base.GetApplicationsResponse;
 import com.ovalsearch.cache.ApplicationsCache;
 import com.ovalsearch.entity.Applications;
@@ -35,13 +34,13 @@ public class ApplicationsController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationsController.class);
 
-    @RequestMapping(value = "/getApplications", produces = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/getApplications", produces = "application/json", method = RequestMethod.GET)
     @ResponseBody
-    public GetApplicationsResponse getApplications(@RequestBody GetApplicationsRequest request) {
+    public GetApplicationsResponse getApplications(@RequestParam(required = true, value = "key") String key) {
         GetApplicationsResponse response = new GetApplicationsResponse();
-        if (request != null && request.getName() != null) {
-            LOG.info("Request received to get applications with name : " + request.getName());
-            List<Applications> applicationsList = CacheManager.getInstance().getCache(ApplicationsCache.class).getAllMatchingApplications(request.getName());
+        if (key != null) {
+            LOG.info("Request received to get applications with name : " + key);
+            List<Applications> applicationsList = CacheManager.getInstance().getCache(ApplicationsCache.class).getAllMatchingApplications(key);
             response.setSros(converterService.getSroFromEntity(applicationsList));
             LOG.info("Sending response for GetApplicationsRequest {}", response);
         } else {
