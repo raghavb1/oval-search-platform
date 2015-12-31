@@ -4,13 +4,12 @@
  */  
 package com.ovalsearch.threads;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,26 +38,37 @@ public class DownloadDataThread implements Runnable {
 	
     @Override
     public void run() {
-    	downloadFile();
-    	parseXML();
-    }
-    
-    private void downloadFile(){
-        // TODO Auto-generated method stub
-    	URL website;
-		try {
-			website = new URL(REMOTE_REPO);
-	    	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-	    	FileOutputStream fos = new FileOutputStream(FILENAME);
-	    	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-	    	fos.close();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    	try {
+			downloadFile();
+	    	parseXML();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+    }
+    
+    private void downloadFile() throws MalformedURLException, IOException {
+    	
+        BufferedInputStream in = null;
+        FileOutputStream fout = null;
+        try {
+            in = new BufferedInputStream(new URL(REMOTE_REPO).openStream());
+            fout = new FileOutputStream(FILENAME);
+
+            final byte data[] = new byte[1024];
+            int count;
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                fout.write(data, 0, count);
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (fout != null) {
+                fout.close();
+            }
+        }
     }
     
     private void parseXML(){
