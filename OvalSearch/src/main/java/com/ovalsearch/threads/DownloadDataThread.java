@@ -4,15 +4,13 @@
  */
 package com.ovalsearch.threads;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.MalformedInputException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -60,28 +58,43 @@ public class DownloadDataThread implements Runnable {
     
     private void downloadFile() throws MalformedURLException, IOException {        
         
-        URL url = null;
-		URLConnection con = null;
-		int i;
-		try {
-			url = new URL(REMOTE_REPO);
-			con = url.openConnection();
-			File file = new File(FILENAME);
-			BufferedInputStream bis = new BufferedInputStream(
-					con.getInputStream());
-			BufferedOutputStream bos = new BufferedOutputStream(
-					new FileOutputStream(file.getName()));
-			while ((i = bis.read()) != -1) {
-				bos.write(i);
-			}
-			bos.flush();
-			bos.close();
-			bis.close();
-		} catch (MalformedInputException malformedInputException) {
-			malformedInputException.printStackTrace();
-		} catch (IOException ioException) {
-			ioException.printStackTrace();
-		}
+    	URL url = new URL(REMOTE_REPO);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+ 
+        // always check HTTP response code first
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            String disposition = httpConn.getHeaderField("Content-Disposition");
+            String contentType = httpConn.getContentType();
+            int contentLength = httpConn.getContentLength();
+
+ 
+            System.out.println("Content-Type = " + contentType);
+            System.out.println("Content-Disposition = " + disposition);
+            System.out.println("Content-Length = " + contentLength);
+            System.out.println("fileName = " + FILENAME);
+ 
+            // opens input stream from the HTTP connection
+            InputStream inputStream = httpConn.getInputStream();
+            String saveFilePath = FILENAME;
+             
+            // opens an output stream to save into file
+            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+ 
+            int bytesRead = -1;
+            byte[] buffer = new byte[4096];
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+ 
+            outputStream.close();
+            inputStream.close();
+ 
+            System.out.println("File downloaded");
+        } else {
+            System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+        }
+        httpConn.disconnect();
     }
 
 
