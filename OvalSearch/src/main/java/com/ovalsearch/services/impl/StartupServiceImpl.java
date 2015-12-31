@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.ovalsearch.cache.ApplicationsCache;
 import com.ovalsearch.cache.PropertyMapCache;
+import com.ovalsearch.dao.IEntityDao;
 import com.ovalsearch.das.IApplicationsDas;
 import com.ovalsearch.das.IPropertyDas;
 import com.ovalsearch.entity.Applications;
@@ -45,6 +46,9 @@ public class StartupServiceImpl implements IStartupService {
 
     @Autowired
     private IPropertyDas        propertyDas;
+
+    @Autowired
+    private IEntityDao          entityDao;
 
     private static final Logger LOG = LoggerFactory.getLogger(StartupServiceImpl.class);
 
@@ -88,26 +92,28 @@ public class StartupServiceImpl implements IStartupService {
     }
 
     private int getInitialDelayInMinutes() {
-        int initialDelay = 0;
+        int delayInMinutes = 0;
         try {
-            String scheduleTime = CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyString(Property.FILE_DOWNLOAD_TIME);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-            Date scheduledDate = dateFormat.parse(scheduleTime);
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            Date passedDate = df.parse(CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyString(Property.FILE_DOWNLOAD_TIME));
             Date currentDate = new Date();
-            Calendar scheduledCalendarInstance = Calendar.getInstance();
-            scheduledCalendarInstance.setTime(scheduledDate);
-            Calendar currentCalendarInstance = Calendar.getInstance();
-            currentCalendarInstance.setTime(currentDate);
-            int minutesToCompleteHour = 60 - currentCalendarInstance.get(Calendar.MINUTE);
-            currentCalendarInstance.add(Calendar.MINUTE, minutesToCompleteHour);
-            int scheduleHourUnit = scheduledCalendarInstance.get(Calendar.HOUR_OF_DAY);
-            int currentHourUnit = currentCalendarInstance.get(Calendar.HOUR_OF_DAY);
-            initialDelay = scheduleHourUnit >= currentHourUnit ? scheduleHourUnit - currentHourUnit : currentHourUnit - scheduleHourUnit;
-            initialDelay = initialDelay * 60 + minutesToCompleteHour;
+            Calendar passedDateCalendar = Calendar.getInstance();
+            Calendar currentDateCalendar = Calendar.getInstance();
+            passedDateCalendar.setTime(passedDate);
+            currentDateCalendar.setTime(currentDate);
+            int currentDateHour = currentDateCalendar.get(Calendar.HOUR_OF_DAY);
+            int passedDateHour = passedDateCalendar.get(Calendar.HOUR_OF_DAY);
+            int currentDateMinutes = currentDateCalendar.get(Calendar.MINUTE);
+            int passedDateMinutes = passedDateCalendar.get(Calendar.MINUTE);
+            int minutesPassed12AMforPassedDate = passedDateHour * 60 + passedDateMinutes;
+            int minutesPassed12AMforCurrentDate = currentDateHour * 60 + currentDateMinutes;
+            delayInMinutes = minutesPassed12AMforPassedDate >= minutesPassed12AMforCurrentDate ? minutesPassed12AMforPassedDate - minutesPassed12AMforCurrentDate
+                    : 24 * 60 - (minutesPassed12AMforCurrentDate - minutesPassed12AMforPassedDate);
         } catch (ParseException e) {
-            LOG.error("Exception in parsing date", e);
+            LOG.error("Error occurred while reading initial time for Close Hos Task. Error message {} ", e);
         }
-        return initialDelay;
+        LOG.info("Initial delay for downloading : " + delayInMinutes);
+        return delayInMinutes;
     }
 
     @Override
@@ -130,7 +136,7 @@ public class StartupServiceImpl implements IStartupService {
                 Property.SCHEDULER_THREAD_POOL_SIZE));
         taskScheduler.setExecutorService(executorService);
         LOG.info("Scheduling Task in newly created Executor Service");
-        ScheduledFuture<?> futureObject = taskScheduler.getExecutorService().scheduleAtFixedRate(new DownloadDataThread(), getInitialDelayInMinutes(),
+        ScheduledFuture<?> futureObject = taskScheduler.getExecutorService().scheduleAtFixedRate(new DownloadDataThread(entityDao), getInitialDelayInMinutes(),
                 CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyInteger(Property.FILE_DOWNLOAD_PERIOD) * 60, TimeUnit.MINUTES);
         taskScheduler.setScheduledTask(futureObject);
     }
