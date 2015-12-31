@@ -15,4 +15,6 @@ import com.ovalsearch.entity.Applications;
 public interface IApplicationsDas {
 
     public List<Applications> getAllApplications();
+    
+    public Applications getApplicationByApkId(String apkId);
 }

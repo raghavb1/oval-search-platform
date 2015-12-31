@@ -136,7 +136,9 @@ public class StartupServiceImpl implements IStartupService {
                 Property.SCHEDULER_THREAD_POOL_SIZE));
         taskScheduler.setExecutorService(executorService);
         LOG.info("Scheduling Task in newly created Executor Service");
-        ScheduledFuture<?> futureObject = taskScheduler.getExecutorService().scheduleAtFixedRate(new DownloadDataThread(entityDao), getInitialDelayInMinutes(),
+        ScheduledFuture<?> futureObject = taskScheduler.getExecutorService().scheduleAtFixedRate(
+                new DownloadDataThread(CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyString(Property.FILENAME), CacheManager.getInstance().getCache(
+                        PropertyMapCache.class).getPropertyString(Property.REMOTE_REPO), entityDao, applicationsDas), getInitialDelayInMinutes(),
                 CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyInteger(Property.FILE_DOWNLOAD_PERIOD) * 60, TimeUnit.MINUTES);
         taskScheduler.setScheduledTask(futureObject);
     }

@@ -28,6 +28,7 @@ public class ApplicationsSro implements Serializable {
     private Float             rating;
     private Integer           size;
     private String            category;
+    private String            apkid;
 
     public String getName() {
         return name;
@@ -93,10 +94,18 @@ public class ApplicationsSro implements Serializable {
         this.category = category;
     }
 
+    public String getApkid() {
+        return apkid;
+    }
+
+    public void setApkid(String apkid) {
+        this.apkid = apkid;
+    }
+
     @Override
     public String toString() {
         return "ApplicationsSro [name=" + name + ", path=" + path + ", icon=" + icon + ", iconHd=" + iconHd + ", downloads=" + downloads + ", rating=" + rating + ", size=" + size
-                + ", category=" + category + "]";
+                + ", category=" + category + ", apkid=" + apkid + "]";
     }
 
 }

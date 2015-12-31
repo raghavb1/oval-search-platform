@@ -29,6 +29,7 @@ public class Applications extends BaseEntity {
     private Float             rating;
     private Integer           size;
     private String            category;
+    private String            apkId;
 
     @Column(name = "name", length = 256, nullable = false)
     public String getName() {
@@ -48,7 +49,7 @@ public class Applications extends BaseEntity {
         this.path = path;
     }
 
-    @Column(name = "icon", length = 1024, nullable = false)
+    @Column(name = "icon", length = 1024, nullable = true)
     public String getIcon() {
         return icon;
     }
@@ -57,7 +58,7 @@ public class Applications extends BaseEntity {
         this.icon = icon;
     }
 
-    @Column(name = "icon_hd", length = 1024, nullable = false)
+    @Column(name = "icon_hd", length = 1024, nullable = true)
     public String getIconHd() {
         return iconHd;
     }
@@ -66,7 +67,7 @@ public class Applications extends BaseEntity {
         this.iconHd = iconHd;
     }
 
-    @Column(name = "downloads", length = 11, nullable = false)
+    @Column(name = "downloads", length = 11, nullable = true)
     public Integer getDownloads() {
         return downloads;
     }
@@ -75,7 +76,7 @@ public class Applications extends BaseEntity {
         this.downloads = downloads;
     }
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating", nullable = true)
     public Float getRating() {
         return rating;
     }
@@ -84,7 +85,7 @@ public class Applications extends BaseEntity {
         this.rating = rating;
     }
 
-    @Column(name = "size", length = 20, nullable = false)
+    @Column(name = "size", length = 20, nullable = true)
     public Integer getSize() {
         return size;
     }
@@ -93,7 +94,7 @@ public class Applications extends BaseEntity {
         this.size = size;
     }
 
-    @Column(name = "category", length = 128, nullable = false)
+    @Column(name = "category", length = 128, nullable = true)
     public String getCategory() {
         return category;
     }
@@ -102,10 +103,19 @@ public class Applications extends BaseEntity {
         this.category = category;
     }
 
+    @Column(name = "apk_id", length = 128, nullable = false)
+    public String getApkId() {
+        return apkId;
+    }
+
+    public void setApkId(String apkId) {
+        this.apkId = apkId;
+    }
+
     @Override
     public String toString() {
         return "Applications [name=" + name + ", path=" + path + ", icon=" + icon + ", iconHd=" + iconHd + ", downloads=" + downloads + ", rating=" + rating + ", size=" + size
-                + ", category=" + category + "]";
+                + ", category=" + category + ", apkId=" + apkId + "]";
     }
 
 }

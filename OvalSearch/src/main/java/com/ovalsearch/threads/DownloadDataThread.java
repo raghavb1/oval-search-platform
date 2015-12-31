@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ovalsearch.dao.IEntityDao;
+import com.ovalsearch.das.IApplicationsDas;
 import com.ovalsearch.entity.Applications;
 
 /**
@@ -33,24 +34,29 @@ import com.ovalsearch.entity.Applications;
  */
 public class DownloadDataThread implements Runnable {
 
-    private String              FILENAME    = "information.xml";
-    private String              REMOTE_REPO = "http://apps.store.aptoide.com/info.xml";
-
+    private String              fileName;
+    private String              remoteRepo;
     private IEntityDao          entityDAO;
+    private IApplicationsDas    applicationsDas;
 
-    private static final Logger LOG         = LoggerFactory.getLogger(DownloadDataThread.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DownloadDataThread.class);
 
-    public DownloadDataThread(IEntityDao entityDAO) {
+    public DownloadDataThread(String fileName, String remoteRepo, IEntityDao entityDAO, IApplicationsDas applicationsDas) {
         super();
+        this.fileName = fileName;
+        this.remoteRepo = remoteRepo;
         this.entityDAO = entityDAO;
+        this.applicationsDas = applicationsDas;
     }
 
     @Override
     public void run() {
-        LOG.info("Thread Called");
         try {
+            LOG.info("Starting to download file from source");
             downloadFile();
+            LOG.info("File downloaded successfully");
             parseXML();
+            LOG.info("File processed successfully");
         } catch (IOException e) {
             LOG.error("Exception ", e);
         }
@@ -63,9 +69,9 @@ public class DownloadDataThread implements Runnable {
         URLConnection con = null;
         int i;
         try {
-            url = new URL(REMOTE_REPO);
+            url = new URL(remoteRepo);
             con = url.openConnection();
-            File file = new File(FILENAME);
+            File file = new File(fileName);
             BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file.getName()));
             while ((i = bis.read()) != -1) {
@@ -83,7 +89,7 @@ public class DownloadDataThread implements Runnable {
 
     private void parseXML() {
         try {
-            File inputFile = new File(FILENAME);
+            File inputFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
@@ -93,9 +99,13 @@ public class DownloadDataThread implements Runnable {
             LOG.info("----------------------------");
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node nNode = nList.item(temp);
-                Applications applications = new Applications();
+                Applications applications = null;
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
+                    applications = applicationsDas.getApplicationByApkId(getStringFromXML(eElement, "apkid"));
+                    if (applications == null) {
+                        applications = new Applications();
+                    }
                     applications.setCategory(getStringFromXML(eElement, "catg"));
                     applications.setDownloads(Integer.parseInt(getStringFromXML(eElement, "dwn")));
                     applications.setIcon(getStringFromXML(eElement, "icon"));
@@ -104,7 +114,7 @@ public class DownloadDataThread implements Runnable {
                     applications.setPath(getStringFromXML(eElement, "path"));
                     applications.setRating(Float.parseFloat(getStringFromXML(eElement, "rat")));
                     applications.setSize(Integer.parseInt(getStringFromXML(eElement, "sz")));
-
+                    applications.setApkId(getStringFromXML(eElement, "apkid"));
                     entityDAO.saveOrUpdate(applications);
                 }
             }
@@ -118,7 +128,9 @@ public class DownloadDataThread implements Runnable {
         String output = null;
         NodeList nodelist = eElement.getElementsByTagName(tag);
         if (nodelist != null) {
-            output = nodelist.item(0).getTextContent();
+            if (nodelist.item(0) != null) {
+                output = nodelist.item(0).getTextContent();
+            }
         }
         return output;
     }

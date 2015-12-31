@@ -35,6 +35,7 @@ public class ConverterServiceImpl implements IConverterService {
                 sro.setPath(application.getPath());
                 sro.setRating(application.getRating());
                 sro.setSize(application.getSize());
+                sro.setApkid(application.getApkId());
                 sros.add(sro);
             }
         }
