@@ -35,7 +35,7 @@ public class ApplicationsCache {
 
     public void addApplication(Applications applications) {
         dataMap.put(applications.getName().replaceAll(REGEX, "").toLowerCase(), applications);
-        apkIDMap.put(applications.getApkId().replaceAll(REGEX, "").toLowerCase(), applications);
+        apkIDMap.put(applications.getApkId(), applications);
     }
 
     public Applications getApplicationsByName(String applicationName) {

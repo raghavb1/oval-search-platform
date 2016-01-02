@@ -37,15 +37,17 @@ public class ConverterServiceImpl implements IConverterService {
 	public ApplicationsSro getApplicationSroFromEntity(Applications application) {
 
 		ApplicationsSro sro = new ApplicationsSro();
-		sro.setCategory(application.getCategory());
-		sro.setDownloads(application.getDownloads());
-		sro.setIcon(application.getIcon());
-		sro.setIconHd(application.getIconHd());
-		sro.setName(application.getName());
-		sro.setPath(application.getPath());
-		sro.setRating(application.getRating());
-		sro.setSize(application.getSize());
-		sro.setApkid(application.getApkId());
+		if(application != null){
+			sro.setCategory(application.getCategory());
+			sro.setDownloads(application.getDownloads());
+			sro.setIcon(application.getIcon());
+			sro.setIconHd(application.getIconHd());
+			sro.setName(application.getName());
+			sro.setPath(application.getPath());
+			sro.setRating(application.getRating());
+			sro.setSize(application.getSize());
+			sro.setApkid(application.getApkId());
+		}
 
 		return sro;
 	}
