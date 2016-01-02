@@ -1,7 +1,7 @@
 /**
  *  Copyright 2015 Jasper Infotech (P) Limited . All Rights Reserved.
  *  JASPER INFOTECH PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */  
+ */
 package com.ovalsearch.cache;
 
 import java.util.ArrayList;
@@ -11,11 +11,12 @@ import java.util.Map;
 
 import com.ovalsearch.annotation.Cache;
 import com.ovalsearch.entity.Applications;
+import com.ovalsearch.enums.Property;
+import com.ovalsearch.utils.CacheManager;
 
 /**
- *  
- *  @version     1.0, 22-Dec-2015
- *  @author deepanshu
+ * @version 1.0, 22-Dec-2015
+ * @author deepanshu
  */
 @Cache(name = "applicationsCache")
 public class ApplicationsCache {
@@ -29,20 +30,24 @@ public class ApplicationsCache {
     public void setDataMap(Map<String, Applications> dataMap) {
         this.dataMap = dataMap;
     }
-    
-    public void addApplication(Applications applications){
+
+    public void addApplication(Applications applications) {
         dataMap.put(applications.getName().toLowerCase(), applications);
     }
-    
-    public Applications getApplicationsByName(String applicationName){
+
+    public Applications getApplicationsByName(String applicationName) {
         return dataMap.get(applicationName.toLowerCase());
     }
-    
-    public List<Applications> getAllMatchingApplications(String key){
+
+    public List<Applications> getAllMatchingApplications(String key) {
+        int dataLimit = CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyInteger(Property.RESULT_LIMIT);
         List<Applications> result = new ArrayList<Applications>();
-        for(String name : dataMap.keySet()){
-            if(name.contains(key.toLowerCase())){
+        for (String name : dataMap.keySet()) {
+            if (name.contains(key.toLowerCase())) {
                 result.add(dataMap.get(name));
+            }
+            if (result.size() >= dataLimit) {
+                break;
             }
         }
         return result;

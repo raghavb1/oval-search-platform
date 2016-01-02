@@ -11,7 +11,8 @@ package com.ovalsearch.enums;
 public enum Property {
 
     FILE_DOWNLOAD_TIME("file.download.time", "05:00"), SCHEDULER_THREAD_POOL_SIZE("scheduler.thread.pool.size", "1"), CACHE_RELOAD_PASSWORD("cache.reload.password", "ovalsearch"), FILE_DOWNLOAD_PERIOD(
-            "file.download.period", "24"), FILENAME("filename", "information.xml"), REMOTE_REPO("remote.repo", "http://apps.store.aptoide.com/info.xml");
+            "file.download.period", "24"), FILENAME("filename", "information.xml"), REMOTE_REPO("remote.repo", "http://apps.store.aptoide.com/info.xml"), RESULT_LIMIT(
+            "result.limit", "20");
 
     private String name;
 

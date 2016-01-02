@@ -30,7 +30,7 @@ public class ApplicationsDaoImpl implements IApplicationsDao {
     @Override
     @Transactional
     public List<Applications> getAllApplications() {
-        Query query = entityDao.getEntityManager().createQuery("Select applications from Applications applications order by downloads,rating DESC");
+        Query query = entityDao.getEntityManager().createQuery("Select applications from Applications applications order by downloads DESC, rating DESC");
         List<Applications> resultSet = (List<Applications>) query.getResultList();
         return resultSet;
     }
