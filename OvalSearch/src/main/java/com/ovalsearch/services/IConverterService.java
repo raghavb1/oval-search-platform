@@ -16,4 +16,6 @@ import com.ovalsearch.entity.Applications;
 public interface IConverterService {
 
     public List<ApplicationsSro> getSroFromEntity(List<Applications> applications);
+
+	ApplicationsSro getApplicationSroFromEntity(Applications application);
 }

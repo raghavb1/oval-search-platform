@@ -22,6 +22,7 @@ import com.ovalsearch.utils.CacheManager;
 public class ApplicationsCache {
 
     private Map<String, Applications> dataMap = new LinkedHashMap<String, Applications>();
+    private Map<String, Applications> apkIDMap = new LinkedHashMap<String, Applications>();
 
     public Map<String, Applications> getDataMap() {
         return dataMap;
@@ -33,10 +34,15 @@ public class ApplicationsCache {
 
     public void addApplication(Applications applications) {
         dataMap.put(applications.getName().toLowerCase(), applications);
+        apkIDMap.put(applications.getApkId().toLowerCase(), applications);
     }
 
     public Applications getApplicationsByName(String applicationName) {
         return dataMap.get(applicationName.toLowerCase());
+    }
+    
+    public Applications getApplicationByApkID(String apkID) {
+        return apkIDMap.get(apkID.toLowerCase());
     }
 
     public List<Applications> getAllMatchingApplications(String key) {

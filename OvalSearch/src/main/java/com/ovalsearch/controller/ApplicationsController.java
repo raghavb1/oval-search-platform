@@ -4,6 +4,7 @@
  */
 package com.ovalsearch.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ovalsearch.base.ApplicationsSro;
 import com.ovalsearch.base.GetApplicationsResponse;
 import com.ovalsearch.cache.ApplicationsCache;
 import com.ovalsearch.entity.Applications;
@@ -42,6 +44,21 @@ public class ApplicationsController {
             LOG.info("Request received to get applications with name : " + key);
             List<Applications> applicationsList = CacheManager.getInstance().getCache(ApplicationsCache.class).getAllMatchingApplications(key);
             response.setSros(converterService.getSroFromEntity(applicationsList));
+            LOG.info("Sending response for GetApplicationsRequest {}", response);
+        } else {
+            LOG.info("Request received with null values. Sending null response");
+        }
+        return response;
+    }
+    
+    @RequestMapping(value = "/getAppData", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public ApplicationsSro getAppData(@RequestParam(required = true, value = "key") String key) {
+    	ApplicationsSro response = new ApplicationsSro();
+        if (key != null) {
+            LOG.info("Request received to get application with apkID : " + key);
+            Applications application = CacheManager.getInstance().getCache(ApplicationsCache.class).getApplicationByApkID(key);
+            response = converterService.getApplicationSroFromEntity(application);
             LOG.info("Sending response for GetApplicationsRequest {}", response);
         } else {
             LOG.info("Request received with null values. Sending null response");
