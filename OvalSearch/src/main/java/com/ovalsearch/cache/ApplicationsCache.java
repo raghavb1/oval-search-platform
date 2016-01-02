@@ -23,6 +23,7 @@ public class ApplicationsCache {
 
     private Map<String, Applications> dataMap = new LinkedHashMap<String, Applications>();
     private Map<String, Applications> apkIDMap = new LinkedHashMap<String, Applications>();
+    private String REGEX = "[^A-Za-z]";
 
     public Map<String, Applications> getDataMap() {
         return dataMap;
@@ -33,8 +34,8 @@ public class ApplicationsCache {
     }
 
     public void addApplication(Applications applications) {
-        dataMap.put(applications.getName().toLowerCase(), applications);
-        apkIDMap.put(applications.getApkId().toLowerCase(), applications);
+        dataMap.put(applications.getName().replaceAll(REGEX, "").toLowerCase(), applications);
+        apkIDMap.put(applications.getApkId().replaceAll(REGEX, "").toLowerCase(), applications);
     }
 
     public Applications getApplicationsByName(String applicationName) {
@@ -49,7 +50,7 @@ public class ApplicationsCache {
         int dataLimit = CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyInteger(Property.RESULT_LIMIT);
         List<Applications> result = new ArrayList<Applications>();
         for (String name : dataMap.keySet()) {
-            if (name.contains(key.toLowerCase())) {
+            if (name.contains(key.replaceAll(REGEX, "").toLowerCase())) {
                 result.add(dataMap.get(name));
             }
             if (result.size() >= dataLimit) {
