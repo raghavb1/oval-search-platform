@@ -39,7 +39,7 @@ public class ApplicationsCache {
     }
 
     public Applications getApplicationsByName(String applicationName) {
-        return dataMap.get(applicationName.toLowerCase());
+        return dataMap.get(applicationName.replaceAll(REGEX, "").toLowerCase());
     }
     
     public Applications getApplicationByApkID(String apkID) {
