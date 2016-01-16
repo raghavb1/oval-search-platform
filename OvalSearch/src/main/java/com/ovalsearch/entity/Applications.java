@@ -30,6 +30,7 @@ public class Applications extends BaseEntity {
     private Integer           size;
     private String            category;
     private String            apkId;
+    private String            alternateUrl;
 
     @Column(name = "name", length = 256, nullable = false)
     public String getName() {
@@ -112,10 +113,19 @@ public class Applications extends BaseEntity {
         this.apkId = apkId;
     }
 
+    @Column(name = "alternate_url", length = 512, nullable = true)
+    public String getAlternateUrl() {
+        return alternateUrl;
+    }
+
+    public void setAlternateUrl(String alternateUrl) {
+        this.alternateUrl = alternateUrl;
+    }
+
     @Override
     public String toString() {
         return "Applications [name=" + name + ", path=" + path + ", icon=" + icon + ", iconHd=" + iconHd + ", downloads=" + downloads + ", rating=" + rating + ", size=" + size
-                + ", category=" + category + ", apkId=" + apkId + "]";
+                + ", category=" + category + ", apkId=" + apkId + ", alternateUrl=" + alternateUrl + "]";
     }
 
 }

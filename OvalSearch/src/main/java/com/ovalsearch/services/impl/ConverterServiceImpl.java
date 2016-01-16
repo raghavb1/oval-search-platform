@@ -20,36 +20,37 @@ import com.ovalsearch.services.IConverterService;
 @Service
 public class ConverterServiceImpl implements IConverterService {
 
-	@Override
-	public List<ApplicationsSro> getSroFromEntity(List<Applications> applications) {
-		List<ApplicationsSro> sros = null;
-		if (applications != null && applications.size() > 0) {
-			sros = new ArrayList<ApplicationsSro>();
-			for (Applications application : applications) {
-				ApplicationsSro sro = getApplicationSroFromEntity(application);
-				sros.add(sro);
-			}
-		}
-		return sros;
-	}
+    @Override
+    public List<ApplicationsSro> getSroFromEntity(List<Applications> applications) {
+        List<ApplicationsSro> sros = null;
+        if (applications != null && applications.size() > 0) {
+            sros = new ArrayList<ApplicationsSro>();
+            for (Applications application : applications) {
+                ApplicationsSro sro = getApplicationSroFromEntity(application);
+                sros.add(sro);
+            }
+        }
+        return sros;
+    }
 
-	@Override
-	public ApplicationsSro getApplicationSroFromEntity(Applications application) {
+    @Override
+    public ApplicationsSro getApplicationSroFromEntity(Applications application) {
 
-		ApplicationsSro sro = new ApplicationsSro();
-		if(application != null){
-			sro.setCategory(application.getCategory());
-			sro.setDownloads(application.getDownloads());
-			sro.setIcon(application.getIcon());
-			sro.setIconHd(application.getIconHd());
-			sro.setName(application.getName());
-			sro.setPath(application.getPath());
-			sro.setRating(application.getRating());
-			sro.setSize(application.getSize());
-			sro.setApkid(application.getApkId());
-		}
+        ApplicationsSro sro = new ApplicationsSro();
+        if (application != null) {
+            sro.setCategory(application.getCategory());
+            sro.setDownloads(application.getDownloads());
+            sro.setIcon(application.getIcon());
+            sro.setIconHd(application.getIconHd());
+            sro.setName(application.getName());
+            sro.setPath(application.getPath());
+            sro.setRating(application.getRating());
+            sro.setSize(application.getSize());
+            sro.setApkid(application.getApkId());
+            sro.setAlternateUrl(application.getAlternateUrl());
+        }
 
-		return sro;
-	}
+        return sro;
+    }
 
 }

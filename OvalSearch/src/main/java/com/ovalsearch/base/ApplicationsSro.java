@@ -29,6 +29,7 @@ public class ApplicationsSro implements Serializable {
     private Integer           size;
     private String            category;
     private String            apkid;
+    private String            alternateUrl;
 
     public String getName() {
         return name;
@@ -102,10 +103,18 @@ public class ApplicationsSro implements Serializable {
         this.apkid = apkid;
     }
 
+    public String getAlternateUrl() {
+        return alternateUrl;
+    }
+
+    public void setAlternateUrl(String alternateUrl) {
+        this.alternateUrl = alternateUrl;
+    }
+
     @Override
     public String toString() {
         return "ApplicationsSro [name=" + name + ", path=" + path + ", icon=" + icon + ", iconHd=" + iconHd + ", downloads=" + downloads + ", rating=" + rating + ", size=" + size
-                + ", category=" + category + ", apkid=" + apkid + "]";
+                + ", category=" + category + ", apkid=" + apkid + ", alternateUrl=" + alternateUrl + "]";
     }
 
 }
