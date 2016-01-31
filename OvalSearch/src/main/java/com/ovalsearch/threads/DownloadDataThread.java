@@ -108,10 +108,10 @@ public class DownloadDataThread implements Runnable {
                     }
                     applications.setCategory(getStringFromXML(eElement, "catg"));
                     applications.setDownloads(Integer.parseInt(getStringFromXML(eElement, "dwn")));
-                    applications.setIcon(getStringFromXML(eElement, "icon"));
-                    applications.setIconHd(getStringFromXML(eElement, "icon_hd"));
+                    applications.setIcon("http://pool.img.aptoide.com/apps/" + getStringFromXML(eElement, "icon"));
+                    applications.setIconHd("http://pool.img.aptoide.com/apps/" + getStringFromXML(eElement, "icon_hd"));
                     applications.setName(getStringFromXML(eElement, "name"));
-                    applications.setPath(getStringFromXML(eElement, "path"));
+                    applications.setPath("http://pool.apk.aptoide.com/apps/" + getStringFromXML(eElement, "path"));
                     applications.setRating(Float.parseFloat(getStringFromXML(eElement, "rat")));
                     applications.setSize(Integer.parseInt(getStringFromXML(eElement, "sz")));
                     applications.setApkId(getStringFromXML(eElement, "apkid"));
