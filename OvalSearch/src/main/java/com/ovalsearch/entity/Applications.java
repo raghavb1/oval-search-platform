@@ -31,6 +31,7 @@ public class Applications extends BaseEntity {
     private String            category;
     private String            apkId;
     private String            alternateUrl;
+    private Boolean           compatibility;
 
     @Column(name = "name", length = 256, nullable = false)
     public String getName() {
@@ -120,6 +121,15 @@ public class Applications extends BaseEntity {
 
     public void setAlternateUrl(String alternateUrl) {
         this.alternateUrl = alternateUrl;
+    }
+    
+    @Column(name = "compatibility", length = 1, nullable = true)
+    public Boolean getCompatibility() {
+        return compatibility;
+    }
+
+    public void setCompatibility(Boolean compatibility) {
+        this.compatibility = compatibility;
     }
 
     @Override
