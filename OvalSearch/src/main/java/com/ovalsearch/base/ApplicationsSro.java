@@ -30,6 +30,7 @@ public class ApplicationsSro implements Serializable {
     private String            category;
     private String            apkid;
     private String            alternateUrl;
+    private Boolean           compatibility;
 
     public String getName() {
         return name;
@@ -109,6 +110,14 @@ public class ApplicationsSro implements Serializable {
 
     public void setAlternateUrl(String alternateUrl) {
         this.alternateUrl = alternateUrl;
+    }
+    
+    public Boolean getCompatibility() {
+        return compatibility;
+    }
+
+    public void setCompatibility(Boolean compatibility) {
+        this.compatibility = compatibility;
     }
 
     @Override
