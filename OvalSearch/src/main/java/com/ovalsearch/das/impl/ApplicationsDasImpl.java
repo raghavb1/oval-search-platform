@@ -39,4 +39,10 @@ public class ApplicationsDasImpl implements IApplicationsDas {
         return applicationsDao.getApplicationByApkId(apkId);
     }
 
+    @Override
+    public List<Applications> getAllApplicationsByQuery() {
+        LOG.info("Getting all applications detail from Dao using user query");
+        return applicationsDao.getAllApplicationsByQuery();
+    }
+
 }

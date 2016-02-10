@@ -38,4 +38,8 @@ public class PropertyMapCache {
     public Integer getPropertyInteger(Property property) {
         return Integer.parseInt((String) propertiesMap.get(property.getName()));
     }
+
+    public Boolean getPropertyBoolean(Property property) {
+        return Boolean.parseBoolean((String) propertiesMap.get(property.getName()));
+    }
 }

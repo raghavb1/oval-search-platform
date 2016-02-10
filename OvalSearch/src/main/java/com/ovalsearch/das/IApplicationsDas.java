@@ -17,4 +17,6 @@ public interface IApplicationsDas {
     public List<Applications> getAllApplications();
     
     public Applications getApplicationByApkId(String apkId);
+    
+    public List<Applications> getAllApplicationsByQuery();
 }

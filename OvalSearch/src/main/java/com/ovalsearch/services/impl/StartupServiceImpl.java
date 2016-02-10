@@ -56,7 +56,9 @@ public class StartupServiceImpl implements IStartupService {
     public void loadContext() {
         loadProperties();
         loadApplicationsCache();
-        loadTaskScheduler();
+        if(CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyBoolean(Property.ENABLE_TASK)){
+            loadTaskScheduler();    
+        }
     }
 
     @Override
@@ -120,8 +122,9 @@ public class StartupServiceImpl implements IStartupService {
     public void loadApplicationsCache() {
         LOG.info("Loading applications cache from DB");
         ApplicationsCache cache = new ApplicationsCache();
-        List<Applications> applications = applicationsDas.getAllApplications();
+        List<Applications> applications = applicationsDas.getAllApplicationsByQuery();
         if (applications != null && applications.size() > 0) {
+            LOG.info("Size of Applications fetched from DB " + applications.size());
             for (Applications application : applications) {
                 cache.addApplication(application);
             }

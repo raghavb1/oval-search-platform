@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ovalsearch.cache.PropertyMapCache;
 import com.ovalsearch.dao.IApplicationsDao;
 import com.ovalsearch.dao.IEntityDao;
 import com.ovalsearch.entity.Applications;
+import com.ovalsearch.enums.Property;
+import com.ovalsearch.utils.CacheManager;
 
 /**
  * @version 1.0, 22-Dec-2015
@@ -47,6 +50,15 @@ public class ApplicationsDaoImpl implements IApplicationsDao {
         } else {
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Applications> getAllApplicationsByQuery() {
+        String queryString = CacheManager.getInstance().getCache(PropertyMapCache.class).getPropertyString(Property.ALL_APPLICATIONS_QUERY);
+        Query query = entityDao.getEntityManager().createQuery(queryString);
+        List<Applications> resultSet = (List<Applications>) query.getResultList();
+        return resultSet;
     }
 
 }
